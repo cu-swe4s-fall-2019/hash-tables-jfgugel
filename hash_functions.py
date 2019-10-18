@@ -5,7 +5,17 @@ def h_ascii(key, N):
     for i in range(len(key)):
         s += ord(key[i])
     return s % N
-    return None
+   
 
-def h_rolling(key, N):
-    return None
+
+def h_polynomial_rolling(key, N, p=53, m=2**64):
+
+    s = 0
+    for i in range(len(key)):
+        s += ord(key[i]) * p**i
+    s = s % m
+    return s % N 
+
+
+ 
+
