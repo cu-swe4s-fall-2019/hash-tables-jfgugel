@@ -13,18 +13,35 @@ def reservoir_sampling(new_val, size, V):
             V[j] = new_val
 
 
-class LinearProbe:
-    def __init__(self, N, hash_fucntion):
-        self.hash_fucntion = hash_fucntion
+class LPHashTable:
+
+    def __init__(self, N, hash_method):
+        self.hash = hash_method
         self.N = N
+        self.T = [ None for i in range(N) ]
+        self.M = 0
 
-    def add(self, key, value):
-        start_hash = self.hash_fucntion(key, self.N)
-        pass
+    def insert(self, key, value):
+        hash_slot = self.hash(key, self.N)
 
-    def search(self, key):
-        start_hash = self.hash_fucntion(key, self.N)
-        pass
+        for i in range(self.N):
+            test_slot = (hash_slot + i) % self.N
+            if self.T[test_slot] == None:
+                self.T[test_slot] = (key, value)
+                self.M += 1
+                return True
+        return False
+
+    def find(self, key):
+        hash_slot = self.hash(key, self.N)
+
+        for i in range(self.N):
+            test_slot = (hash_slot + i) % self.N
+            if self.T[test_slot] == None:
+                return None
+            if self.T[test_slot][0] == key:
+                return self.T[test_slot][1]
+        return None
 
 class ChainedHash:
     
