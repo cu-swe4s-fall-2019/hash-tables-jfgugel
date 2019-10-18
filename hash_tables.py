@@ -3,6 +3,16 @@ import sys
 import time
 import random
 
+
+def reservoir_sampling(new_val, size, V):
+    if len(V) < size:
+        V.append(new_val)
+    else:
+        j = random.randint(0, len(V))
+        if j < len(V):
+            V[j] = new_val
+
+
 class LinearProbe:
     def __init__(self, N, hash_fucntion):
         self.hash_fucntion = hash_fucntion
@@ -16,7 +26,7 @@ class LinearProbe:
         start_hash = self.hash_fucntion(key, self.N)
         pass
 
-class hainedHash:
+class ChainedHash:
     
     def __init__(self, N, hash_method):
         self.hash = hash_method
@@ -29,7 +39,6 @@ class hainedHash:
         self.T[hash_slot].append((key,value))
         self.M += 1
         return True
-
 
     def find(self, key):
         hash_slot = self.hash(key, self.N)
