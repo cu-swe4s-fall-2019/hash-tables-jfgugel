@@ -46,6 +46,54 @@ class ChainedHash:
             if key == k:
                 return v
             return None
-    
+
+if __name__ == '__main__':
+
+    N = int(sys.argv[1])
+    hash_alg = sys.argv[2]
+    collision_strategy = sys.argv[3]
+    data_file_name= sys.argv[4]
+    keys_to_add = int(sys.argv[5])
+
+    ht = None
+
+    if hash_alg == 'ascii':
+
+        if collision_strategy == 'linear':
+            ht = LPHashTable(N, hash_functions.h_ascii_sum)
+        elif collision_strategy == 'chain':
+            ht = ChainHashTable(N, hash_functions.h_ascii_sum)
+
+    elif hash_alg == 'rolling':
+
+        if collision_strategy == 'linear':
+            ht = LPHashTable(N, hash_functions.h_polynomial_rolling)
+        elif collision_strategy == 'chain':
+            ht = ChainHashTable(N, hash_functions.h_polynomial_rolling)
+
+
+    elif hash_alg == 'python':
+        if collision_strategy == 'linear':
+            ht = LPHashTable(N, hash_functions.h_python)
+        elif collision_strategy == 'chain':
+            ht = ChainHashTable(N, hash_functions.h_python)
+
+    keys_to_search = 100
+    V = []
+
+    for l in open(data_file_name):
+        reservoir_sampling(l, keys_to_search, V)
+        t0 = time.time()
+        ht.insert(l, l)
+        t1 = time.time()
+        print('insert', ht.M/ht.N, t1 - t0)
+        if ht.M == keys_to_add:
+            break
+
+    for v in V:
+        t0 = time.time()
+        r = ht.find(v)
+        t1 = time.time()
+        print('search', t1 - t0)
     
 
